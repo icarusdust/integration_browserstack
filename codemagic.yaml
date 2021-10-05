@@ -38,6 +38,12 @@ workflows:
       - name: Install pods
         script: |
           find . -name "Podfile" -execdir pod install \;
+      - name: Testing:
+        script: |
+           flutter build ios
+      - name: Zip
+        script: |
+           zip --symlinks -r MyAppUITests.zip build/ios/ipa/nihal.ipa Runner.app 
       - name: Flutter build ipa and automatic versioning
         script: |
           flutter build ipa --release \
@@ -45,15 +51,15 @@ workflows:
           --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
           --export-options-plist=/Users/builder/export_options.plist
 
-      # - name: App upload and Set app id in environment variable.
-      #   script: |      
-      #     APP_URL=$(curl -u "nihalagazade_JxPH1i:4y5LkQnzzGkv2s7ERZ4q" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "file=@build/ios/ipa/nihal.ipa" | jq -r '.app_url') 
-      #      echo $APP_URL
-      #     RESPONSE=$(curl -u "nihalagazade_JxPH1i:4y5LkQnzzGkv2s7ERZ4q" -X POST "https://api-cloud.browserstack.com/app-automate/xcuitest/test-suite" -F "file=@$FCI_BUILD_DIR/MyAppUITests.zip")
-      #      echo $RESPONSE
-      #     TEST_URL=$(echo $RESPONSE | jq -r '.test_url')
-      #      echo $TEST_URL
-      #     curl -X POST "https://api-cloud.browserstack.com/app-automate/xcuitest/build" -d "{\"devices\": [\"iPhone 11 Pro-13\"], "app": ""'"$APP_URL"'"", \"deviceLogs\" : \"true\", "testSuite": "'"$TEST_URL"'"}" -H "Content-Type: application/json" -u "nihalagazade_JxPH1i:4y5LkQnzzGkv2s7ERZ4q"    
+      - name: App upload and Set app id in environment variable.
+        script: |      
+          APP_URL=$(curl -u "nihalagazade_JxPH1i:4y5LkQnzzGkv2s7ERZ4q" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "file=@build/ios/ipa/nihal.ipa" | jq -r '.app_url') 
+           echo $APP_URL
+          RESPONSE=$(curl -u "nihalagazade_JxPH1i:4y5LkQnzzGkv2s7ERZ4q" -X POST "https://api-cloud.browserstack.com/app-automate/xcuitest/test-suite" -F "file=@$FCI_BUILD_DIR/MyAppUITests.zip")
+           echo $RESPONSE
+          TEST_URL=$(echo $RESPONSE | jq -r '.test_url')
+           echo $TEST_URL
+          curl -X POST "https://api-cloud.browserstack.com/app-automate/xcuitest/build" -d "{\"devices\": [\"iPhone 11 Pro-13\"], "app": ""'"$APP_URL"'"", \"deviceLogs\" : \"true\", "testSuite": "'"$TEST_URL"'"}" -H "Content-Type: application/json" -u "nihalagazade_JxPH1i:4y5LkQnzzGkv2s7ERZ4q"    
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
