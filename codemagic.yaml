@@ -41,16 +41,16 @@ workflows:
       - name: Testing
         script: |
            flutter build ios
-      - name: Zip
-        script: |
-           zip --symlinks -r MyAppUITests.zip build/ios/ipa/nihal.ipa Runner.app 
+
       - name: Flutter build ipa and automatic versioning
         script: |
           flutter build ipa --release \
           --build-name=1.0.0 \
           --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
           --export-options-plist=/Users/builder/export_options.plist
-
+      - name: Zip
+        script: |
+           zip --symlinks -r MyAppUITests.zip build/ios/ipa/integration_browserstack.ipa Runner.app 
       - name: App upload and Set app id in environment variable.
         script: |      
           APP_URL=$(curl -u "nihalagazade_JxPH1i:4y5LkQnzzGkv2s7ERZ4q" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "file=@build/ios/ipa/nihal.ipa" | jq -r '.app_url') 
