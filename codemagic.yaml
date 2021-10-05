@@ -38,7 +38,7 @@ workflows:
       - name: Install pods
         script: |
           find . -name "Podfile" -execdir pod install \;
-      - name: Testing:
+      - name: Testing
         script: |
            flutter build ios
       - name: Zip
