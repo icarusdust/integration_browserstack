@@ -49,7 +49,7 @@ workflows:
           --export-options-plist=/Users/builder/export_options.plist
       - name: Zip
         script: |
-           zip --symlinks -r MyAppUITests.zip /Users/builder/clone/build/ios/iphoneos/Runner.app build/ios/ipa/integration_browserstack.ipa
+           zip --symlinks -r MyAppUITests.zip /Users/builder/clone/build/ios/iphoneos/Runner.app.
       - name: App upload and Set app id in environment variable.
         script: |      
           APP_URL=$(curl -u "nihalagazade_JxPH1i:4y5LkQnzzGkv2s7ERZ4q" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "file=@build/ios/ipa/nihal.ipa" | jq -r '.app_url') 
